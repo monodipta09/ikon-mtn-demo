@@ -18,11 +18,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
-    elevation: 4,
+    elevation: 0,
     marginHorizontal: 16, // Gap on both left and right
     width: '90%', // Ensures the card does not stretch too much on larger screens
     maxWidth: '90%',
     alignSelf: 'center', // Centers the card horizontally
+    marginBottom: 16
   },
   header: {
     fontSize: 18,

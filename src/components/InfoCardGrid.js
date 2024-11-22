@@ -7,10 +7,10 @@ const InfoCardGrid = ({ cardData }) => {
     <View style={styles.grid}>
       {cardData.map((card, index) => (
         <View style={styles.gridItem} key={index}>
-          <InfoCard 
-            baseColor={card.baseColor} 
-            cardName={card.cardName} 
-            cardValue={card.cardValue} 
+          <InfoCard
+            baseColor={card.baseColor}
+            cardName={card.cardName}
+            cardValue={card.cardValue}
           />
         </View>
       ))}
