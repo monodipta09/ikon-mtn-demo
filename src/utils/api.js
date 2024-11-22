@@ -18,6 +18,7 @@ const sha512 = async (content) => {
 const baseUrl = 'https://ikoncloud.keross.com/rest';
 
 export const loginApi = async (username, password) => {
+
     try {
         // Generate SHA-512 hash for the password
         const hashPasswd = await sha512(password);
@@ -79,6 +80,7 @@ export const loginApi = async (username, password) => {
 };
 
 export const otpApi = async (otp) => {
+
     try {
         // Set request headers
         const headers = {

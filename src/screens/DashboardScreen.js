@@ -1,76 +1,87 @@
-import React from 'react';
-import { ScrollView, Text, View, StyleSheet } from 'react-native';
-import Chart from '../components/Chart';
-import dummyData from '../utils/dummyData';
+import React, { useState } from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import Header from "../components/Header";
+import HeaderTabsGrid from "../components/HeaderTabsGrid";
+import InfoCardGrid from "../components/InfoCardGrid";
+import { useRoute } from "@react-navigation/native"; // Import route
+import AppHeader from "../components/appHeader"
+
+import ConditionalDashboard from "../components/ConditionalDashboard";
+import OverallDashboard from "../components/OverallDashboard";
 
 const DashboardScreen = () => {
+  const route = useRoute(); // Get route params
+  const appName = route.params?.appName || "Dashboard"; // Fallback if no param
+
+  const [activeTab, setActiveTab] = useState("Overall Dashboard");
+
+  const tabs = [
+    { baseColor: "#FFC107", tabName: "Overall Dashboard" },
+    { baseColor: "#FFC107", tabName: "Finance Dashboard" },
+    { baseColor: "#FFC107", tabName: "Additional Dashboard" },
+  ];
+
+  const cards = [
+    { baseColor: "#FFCB05", cardName: "Subscribers", cardValue: "154,625" },
+    { baseColor: "#191146", cardName: "Revenue", cardValue: "1,234,567" },
+    { baseColor: "#272727", cardName: "Market Share", cardValue: "987,654" },
+    { baseColor: "#712D2D", cardName: "Churn Rate", cardValue: "123,456" },
+  ];
+
+
+  const navigation = useNavigation()
+  const navgigateToApp = (appName) => {
+    if (appName === 'MTN') {
+      navigation.navigate('chartdashboards', { appName: appName }); // Pass appName as a param
+    } else {
+      alert(`Feature for ${appName} is not yet implemented.`);
+    }
+  }
+
+  const handleTabPress = (tabName) => {
+    setActiveTab(tabName);
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      {/* First Fragment: Welcome Message */}
-      <View style={styles.fragment}>
-        <Text style={styles.welcomeTitle}>Welcome to the Dashboard!</Text>
-        <Text style={styles.welcomeText}>
-          Here you can view your business insights and analyze key metrics.
-        </Text>
-      </View>
+    <>
+      {/* <AppHeader navgigateToApp={navgigateToApp}></AppHeader> */}
 
-      {/* Second Fragment: First Dashboard Placeholder */}
-      <View style={styles.fragment}>
-        <Text style={styles.title}>Dashboard</Text>
-        <Chart data={dummyData} />
-      </View>
+      <ScrollView style={styles.container}>
+        {/* Header */}
+        <HeaderTabsGrid
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabPress={handleTabPress}
+        />
+        {/* Header Tabs */}
 
-      {/* Third Fragment: Second Dashboard Placeholder */}
-      <View style={styles.fragment}>
-        <Text style={styles.dashboardTitle}>Dashboard 2</Text>
-        <View style={styles.chartPlaceholder}>
-          <Text style={styles.placeholderText}>Chart for Dashboard 2</Text>
+        {/* Info Cards */}
+        <View style={styles.cardContainer}>
+          <InfoCardGrid cardData={cards} />
+          <ConditionalDashboard matchProp={"associatedTabName"} matchValue={activeTab}>
+            <OverallDashboard associatedTabName={"Overall Dashboard"} />
+          </ConditionalDashboard>
+
         </View>
-      </View>
-    </ScrollView>
+
+      </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
   },
-  fragment: {
-    marginBottom: 30,
-    padding: 15,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
+  cardContainer: {
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
-  welcomeTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  welcomeText: {
-    fontSize: 16,
-    color: '#555',
-  },
-  dashboardTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 10,
-  },
-  chartPlaceholder: {
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e0e0e0',
-    borderRadius: 10,
-  },
-  placeholderText: {
-    fontSize: 16,
-    color: '#777',
+  chartContainer: {
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
 });
 

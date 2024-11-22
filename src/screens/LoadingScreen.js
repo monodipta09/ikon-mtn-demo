@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   bufferingLine: {
     width: 100,
     height: 4,
-    backgroundColor: '#ffffff', // Color of the moving line
+    backgroundColor: '#FFCB05', // Color of the moving line
     borderRadius: 2,
   },
 });

@@ -1,77 +1,60 @@
-// import React from 'react';
-// import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Image,
+  Modal,
+} from 'react-native';
+import AppCard from '../components/AppCard';
+import { useNavigation } from '@react-navigation/native'; // Import navigation hook
+import AppHeader from '../components/appHeader';
 
-// const WelcomeScreen = () => {
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.title}>Welcome to the Dashboard!</Text>
-//       <Text style={styles.subtitle}>
-//         Explore insights and analyze key metrics by navigating to the dashboards below.
-//       </Text>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#f9f9f9',
-//   },
-//   title: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     marginBottom: 10,
-//   },
-//   subtitle: {
-//     fontSize: 16,
-//     color: '#555',
-//     textAlign: 'center',
-//     paddingHorizontal: 20,
-//   },
-// });
-
-// export default WelcomeScreen;
-
-
-
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
-// import { SvgUri } from 'react-native-svg';
-
-// Get the screen width and height
 const { width, height } = Dimensions.get('window');
 
 const WelcomeScreen = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const navigation = useNavigation()
+
+  const navgigateToApp = (appName) => {
+    if (appName === 'MTN') {
+      navigation.navigate('chartdashboards', { appName: appName }); // Pass appName as a param
+    } else {
+      alert(`Feature for ${appName} is not yet implemented.`);
+    }
+  }
+
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <Text style={styles.headerText}>Welcome to IKON Orchestration Platform</Text>
+      {/* Content Container */}
+      <View style={styles.contentContainer}>
+        {/* Header */}
+        <Text style={styles.headerText}>Welcome to IKON Orchestration Platform</Text>
 
-      {/* Description */}
-      <Text style={styles.description}>
-        The only true OpenAI-enabled Orchestration Platform that will solve all your challenges and successfully implement your functional and technical roadmap.
-      </Text>
+        {/* Description */}
+        <Text style={styles.description}>
+          The only true OpenAI-enabled Orchestration Platform that will solve all your challenges and successfully implement your functional and technical roadmap.
+        </Text>
 
-      {/* Pie Chart with SVG Image */}
-      {/* <View style={styles.pieChartContainer}>
-        <SvgUri
-          uri='../../assets/landingPageChart.jpg' // Replace with your SVG file URI or local asset path
-          width={width * 0.4} // 40% of the screen width
-          height={width * 0.4} // 40% of the screen width
-        />
-      </View> */}
+        {/* Image */}
+        <Image source={require('../../assets/welcomePage.png')} style={styles.image} />
+      </View>
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.settingsButton}>
-          <Text style={styles.settingsButtonText}>Settings</Text>
+          <Text style={styles.buttonText}>Settings</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.subscribeButton}>
-          <Text style={styles.subscribeButtonText}>Subscribe the Apps</Text>
+        <TouchableOpacity
+          style={styles.subscribeButton}
+          onPress={() => setIsModalVisible(true)}
+        >
+          <Text style={styles.buttonText}>Subscribe the Apps</Text>
         </TouchableOpacity>
       </View>
+      <AppHeader navgigateToApp={navgigateToApp}></AppHeader>
     </View>
   );
 };
@@ -80,59 +63,105 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
+    paddingHorizontal: width * 0.05,
+    justifyContent: 'space-between',
+  },
+  contentContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: width * 0.05, // 5% of the screen width
   },
   headerText: {
-    fontSize: width * 0.06, // 6% of the screen width
+    fontSize: width * 0.08,
     fontWeight: 'bold',
     color: '#000',
     textAlign: 'center',
+    marginBottom: height * 0.02,
   },
   description: {
-    fontSize: width * 0.04, // 4% of the screen width
+    fontSize: width * 0.035,
     color: '#555',
     textAlign: 'center',
-    marginBottom: height * 0.03, // 3% of the screen height
-    lineHeight: width * 0.05, // 5% of the screen width
+    marginBottom: height * 0.05,
+    lineHeight: width * 0.05,
   },
-  pieChartContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: height * 0.05, // 5% of the screen height
+  image: {
+    width: width * 0.9,
+    height: height * 0.35,
+    resizeMode: 'contain',
+    marginBottom: height * 0.05,
   },
   buttonContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: width * 0.05, // 5% of the screen width
+    paddingBottom: height * 0.05,
+    paddingHorizontal: width * 0.1,
   },
   settingsButton: {
-    flex: 1,
-    backgroundColor: '#F4F9FD',
-    paddingVertical: height * 0.02, // 2% of the screen height
-    borderRadius: 60,
+    width: width * 0.35,
+    backgroundColor: '#FFF',
+    paddingVertical: height * 0.02,
+    borderRadius: 30,
     alignItems: 'center',
-    marginRight: width * 0.02, // 2% of the screen width
-  },
-  settingsButtonText: {
-    color: '#000',
-    fontSize: width * 0.04, // 4% of the screen width
-    fontWeight: '500',
+    borderWidth: 1,
+    borderColor: '#000',
+    marginRight: width * 0.02,
   },
   subscribeButton: {
-    flex: 2,
+    width: width * 0.35,
     backgroundColor: '#FFCB05',
-    paddingVertical: height * 0.02, // 2% of the screen height
-    borderRadius: 60,
+    paddingVertical: height * 0.02,
+    borderRadius: 30,
+    alignItems: 'center',
+    marginLeft: width * 0.02,
+  },
+  buttonText: {
+    color: '#000',
+    fontSize: width * 0.035,
+    fontWeight: '500',
+  },
+  modalContainer: {
+    marginHorizontal: 20,
+    marginVertical: 202,
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    padding: 20,
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  subscribeButtonText: {
-    color: 'black',
-    fontSize: width * 0.04, // 4% of the screen width
-    fontWeight: '500',
+  modalHeader: {
+    fontSize: width * 0.05,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 20,
+  },
+  appsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: '#FFCB05',
+    borderRadius: 50,
+    padding: 10,
+  },
+  closeButtonText: {
+    fontSize: width * 0.04,
+    fontWeight: 'bold',
+    color: '#000',
   },
 });
 
 export default WelcomeScreen;
+
+
+
+
+
+
+
