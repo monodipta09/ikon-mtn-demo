@@ -33,9 +33,6 @@ const OverallDashboard = ({ associatedTabName }) => {
                 <ChartCardComponent header={"Name"} backgroundColor={"#fff"}>
                     <LineChartComponent data={data} color={colorScheme}></LineChartComponent>
                 </ChartCardComponent>
-                <ChartCardComponent header={"Name"} backgroundColor={"#fff"}>
-                    <DonutChartComponent data={pieData}></DonutChartComponent>
-                </ChartCardComponent>
             </ChartsContainer>
         </>
     )
