@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, Image, Modal, Text, } from 'react-native';
-import Icon from "react-native-vector-icons/Ionicons"; // Add this import
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, StyleSheet, Image, Modal } from 'react-native';
+import Icon from "react-native-vector-icons/Ionicons"; 
+import { useNavigation, useIsFocused } from '@react-navigation/native'; // Import useIsFocused
 import AppDrawer from './AppDrawer';
-
-const databaseIcon = require("../../assets/database.png");
 
 const Header = ({ navgigateToApp }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedApp, setSelectedApp] = useState(null);
-  const navigation = useNavigation(); // Navigation object
+  const navigation = useNavigation();
+  const isFocused = useIsFocused(); // Check if the page is in focus
+
+  useEffect(() => {
+    if (!isFocused) {
+      // Reset modal visibility when navigating away
+      setIsModalVisible(false);
+    }
+  }, [isFocused]);
 
   const apps = [
     { id: 1, text: 'MTN' },
@@ -33,7 +38,10 @@ const Header = ({ navgigateToApp }) => {
         >
           <Icon name="menu-outline" size={24} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => navigation.navigate('Welcome')} // Navigate to the "Welcome" tab
+        >
           <Image
             source={require("../../assets/iconLogo.png")}
             style={styles.logo}
@@ -53,7 +61,12 @@ const Header = ({ navgigateToApp }) => {
       </View>
 
       {/* Modal for App Selection */}
-      <AppDrawer apps={apps} isModalVisibleRef={isModalVisible} setModalVisibleRef={setIsModalVisible} navgigateToApp={navgigateToApp} />
+      <AppDrawer
+        apps={apps}
+        isModalVisibleRef={isModalVisible}
+        setModalVisibleRef={setIsModalVisible}
+        navgigateToApp={navgigateToApp}
+      />
     </View>
   );
 };

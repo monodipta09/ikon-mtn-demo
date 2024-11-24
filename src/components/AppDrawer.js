@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
-import { Modal, Text, View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
-import AppCard from './AppCard'
+import { Modal, Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import AppCard from './AppCard';
 
 const AppDrawer = ({ apps, isModalVisibleRef, setModalVisibleRef, navgigateToApp }) => {
-
     const [selectedApp, setSelectedApp] = useState(null);
-    const databaseIcon = require('../../assets/database.png')
+    const databaseIcon = require('../../assets/database.png');
 
     return (
-        <>
-            <Modal
-                visible={isModalVisibleRef}
-                transparent={true}
-                animationType="slide"
-                onRequestClose={() => setModalVisibleRef(false)}
-            >
+        <Modal
+            visible={isModalVisibleRef}
+            transparent={true} // Allow background to be visible
+            animationType="slide"
+            onRequestClose={() => setModalVisibleRef(false)}
+        >
+            {/* Light black overlay */}
+            <View style={styles.overlay}>
                 <View style={styles.modalContainer}>
                     <Text style={styles.modalHeader}>Choose your app</Text>
                     <View style={styles.appsContainer}>
@@ -26,8 +26,9 @@ const AppDrawer = ({ apps, isModalVisibleRef, setModalVisibleRef, navgigateToApp
                                 text={app.text}
                                 isSelected={selectedApp === app.id}
                                 onPress={() => {
-                                    setSelectedApp(app.id);
-                                    navgigateToApp(app.text);
+                                    setSelectedApp(app.id); // Highlight the selected card
+                                    navgigateToApp(app.text); // Navigate to the selected app
+                                    setTimeout(() => setSelectedApp(null), 300); // Reset selection color after 300ms
                                 }}
                             />
                         ))}
@@ -39,13 +40,18 @@ const AppDrawer = ({ apps, isModalVisibleRef, setModalVisibleRef, navgigateToApp
                         <Icon name="close-outline" size={24} color="#000" />
                     </TouchableOpacity>
                 </View>
-            </Modal>
-        </>
-    )
-}
-
+            </View>
+        </Modal>
+    );
+};
 
 const styles = StyleSheet.create({
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)', // Light black background
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     modalContainer: {
         flex: 1,
         backgroundColor: '#fff',
@@ -58,7 +64,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',  // Ensuring the content doesn't overflow
         elevation: 5,        // Adding shadow for better visibility
         marginTop: 120,
-        marginBottom: 120
+        marginBottom: 120,
     },
     modalHeader: {
         fontSize: 18,
@@ -82,6 +88,5 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
 });
-
 
 export default AppDrawer;

@@ -105,7 +105,7 @@ const AppNavigator = () => {
       const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
 
       if (currentRoute === 'Dashboard') {
-        Alert.alert('Logout', 'Do you want to logout and return to the Login screen?', [
+        Alert.alert('Logout', 'Do you want to logout?', [
           {
             text: 'Cancel',
             style: 'cancel',
