@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import Header from "../components/Header";
 import HeaderTabsGrid from "../components/HeaderTabsGrid";
 import InfoCardGrid from "../components/InfoCardGrid";
-import { useRoute } from "@react-navigation/native"; // Import route
-import AppHeader from "../components/appHeader"
+import { useRoute } from "@react-navigation/native";
+import AppHeader from "../components/appHeader";
 
 import ConditionalDashboard from "../components/ConditionalDashboard";
 import OverallDashboard from "../components/OverallDashboard";
 
 const DashboardScreen = () => {
-  const route = useRoute(); // Get route params
-  const appName = route.params?.appName || "Dashboard"; // Fallback if no param
+  const route = useRoute();
+  const appName = route.params?.appName || "Dashboard";
 
   const [activeTab, setActiveTab] = useState("Overall Dashboard");
 
@@ -29,32 +28,32 @@ const DashboardScreen = () => {
     { baseColor: "#712D2D", cardName: "Churn Rate", cardValue: "123,456" },
   ];
 
-
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const navgigateToApp = (appName) => {
     if (appName === 'MTN') {
-      navigation.navigate('chartdashboards', { appName: appName }); // Pass appName as a param
+      navigation.navigate('chartdashboards', { appName: appName });
     } else {
       alert(`Feature for ${appName} is not yet implemented.`);
     }
-  }
+  };
 
   const handleTabPress = (tabName) => {
     setActiveTab(tabName);
   };
 
   return (
-    <>
-      {/* <AppHeader navgigateToApp={navgigateToApp}></AppHeader> */}
+    <View style={styles.container}>
+      {/* App Header */}
+      <AppHeader navgigateToApp={navgigateToApp} />
 
-      <ScrollView style={styles.container}>
-        {/* Header */}
+      {/* Main Content */}
+      <ScrollView style={styles.scrollView}>
+        {/* Header Tabs */}
         <HeaderTabsGrid
           tabs={tabs}
           activeTab={activeTab}
           onTabPress={handleTabPress}
         />
-        {/* Header Tabs */}
 
         {/* Info Cards */}
         <View style={styles.cardContainer}>
@@ -62,11 +61,9 @@ const DashboardScreen = () => {
           <ConditionalDashboard matchProp={"associatedTabName"} matchValue={activeTab}>
             <OverallDashboard associatedTabName={"Overall Dashboard"} />
           </ConditionalDashboard>
-
         </View>
-
       </ScrollView>
-    </>
+    </View>
   );
 };
 
@@ -74,13 +71,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f9f9f9",
+    paddingTop: 55,
+  },
+  scrollView: {
+    flex: 1,
   },
   cardContainer: {
-    marginTop: 20,
-    paddingHorizontal: 10,
-  },
-  chartContainer: {
-    marginTop: 20,
+    marginTop: 5,
     paddingHorizontal: 10,
   },
 });
