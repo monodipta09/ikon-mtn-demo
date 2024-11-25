@@ -425,86 +425,12 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, ScrollView, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-const OverallDashboard = () => {
-    const chartHtmlContent1 = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Service Utilization</title>
-      <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-      <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-      <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-      <style>
-        body {
-          margin: 0;
-          padding: 0;
-          font-family: Arial, sans-serif;
-        }
-        #chartdiv1 {
-          width: 100%;
-          height: 200px;
-        }
-      </style>
-    </head>
-    <body>
-      <div id="chartdiv1"></div>
-      <script>
-        am5.ready(function() {
-          // Data for first chart
-          var serviceUtilization = ${JSON.stringify([
-            { 'month': 'Jan', 'text': 0.38, 'voice': 0.33, 'data': 0.29 },
-            { 'month': 'Feb', 'text': 0.37, 'voice': 0.32, 'data': 0.30 },
-            { 'month': 'Mar', 'text': 0.39, 'voice': 0.34, 'data': 0.31 },
-            { 'month': 'Apr', 'text': 0.36, 'voice': 0.32, 'data': 0.28 },
-            { 'month': 'May', 'text': 0.38, 'voice': 0.35, 'data': 0.30 },
-            { 'month': 'Jun', 'text': 0.39, 'voice': 0.34, 'data': 0.29 },
-            { 'month': 'Jul', 'text': 0.37, 'voice': 0.33, 'data': 0.28 },
-            { 'month': 'Aug', 'text': 0.36, 'voice': 0.35, 'data': 0.30 },
-            { 'month': 'Sep', 'text': 0.38, 'voice': 0.33, 'data': 0.31 },
-            { 'month': 'Oct', 'text': 0.39, 'voice': 0.34, 'data': 0.30 },
-            { 'month': 'Nov', 'text': 0.37, 'voice': 0.32, 'data': 0.29 },
-            { 'month': 'Dec', 'text': 0.36, 'voice': 0.33, 'data': 0.28 }
-          ])};
-
-          // First chart logic
-          var root1 = am5.Root.new("chartdiv1");
-          root1.setThemes([am5themes_Animated.new(root1)]);
-
-          var chart1 = root1.container.children.push(am5xy.XYChart.new(root1, {
-            layout: root1.verticalLayout
-          }));
-
-          var xAxis1 = chart1.xAxes.push(am5xy.CategoryAxis.new(root1, {
-            categoryField: "month",
-            renderer: am5xy.AxisRendererX.new(root1, { minGridDistance: 30 })
-          }));
-          xAxis1.data.setAll(serviceUtilization);
-
-          var yAxis1 = chart1.yAxes.push(am5xy.ValueAxis.new(root1, {
-            renderer: am5xy.AxisRendererY.new(root1, {})
-          }));
-
-          ["text", "voice", "data"].forEach(type => {
-            var series1 = chart1.series.push(am5xy.LineSeries.new(root1, {
-              name: type,
-              xAxis: xAxis1,
-              yAxis: yAxis1,
-              valueYField: type,
-              categoryXField: "month",
-              tooltip: am5.Tooltip.new(root1, { labelText: "{name}: {valueY}" })
-            }));
-            series1.data.setAll(serviceUtilization);
-          });
-        }); // End of am5.ready
-      </script>
-    </body>
-    </html>
-  `;
-  const chartHtmlContent2 = `
+const AdditionalDashboard = () => {
+    const barChartHtmlContent = `
   <!DOCTYPE html>
   <html>
   <head>
-    <title>Service Utilization</title>
+    <title>Average Revenue Per User</title>
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
@@ -513,9 +439,8 @@ const OverallDashboard = () => {
         margin: 0;
         padding: 0;
         font-family: Arial, sans-serif;
-        background-color: #FFFFFF; /* White background */
       }
-      #chartdiv2 {
+      #chartdiv7 {
         width: 100%;
         height: 400px;
         margin-bottom: 20px;
@@ -523,175 +448,221 @@ const OverallDashboard = () => {
     </style>
   </head>
   <body>
-    <div id="chartdiv2"></div>
+    <div id="chartdiv7"></div>
     <script>
       am5.ready(function() {
-        // Data for chart
-        var subscribersPerServiceType = ${JSON.stringify([
-          { 'month': 'Jan', 'fixed': 570, 'postpaid': 710, 'prepaid': 390 },
-          { 'month': 'Feb', 'fixed': 450, 'postpaid': 610, 'prepaid': 610 },
-          { 'month': 'Mar', 'fixed': 510, 'postpaid': 670, 'prepaid': 570 },
-          { 'month': 'Apr', 'fixed': 590, 'postpaid': 480, 'prepaid': 520 },
-          { 'month': 'May', 'fixed': 530, 'postpaid': 530, 'prepaid': 530 },
-          { 'month': 'Jun', 'fixed': 540, 'postpaid': 630, 'prepaid': 620 },
-          { 'month': 'Jul', 'fixed': 670, 'postpaid': 480, 'prepaid': 470 },
-          { 'month': 'Aug', 'fixed': 240, 'postpaid': 240, 'prepaid': 0 },
-          { 'month': 'Sep', 'fixed': 240, 'postpaid': 240, 'prepaid': 0 },
-          { 'month': 'Oct', 'fixed': 170, 'postpaid': 300, 'prepaid': 0 },
-          { 'month': 'Nov', 'fixed': 300, 'postpaid': 300, 'prepaid': 0 },
-          { 'month': 'Dec', 'fixed': 340, 'postpaid': 340, 'prepaid': 0 }
+        // Data for bar chart
+        var avgRevPerUser = ${JSON.stringify([
+          { "minutes": "1200", "revenue": 1200 },
+          { "minutes": "Unlimited", "revenue": 1200 },
+          { "minutes": "999", "revenue": 900 },
+          { "minutes": "900", "revenue": 900 },
+          { "minutes": "750", "revenue": 750 },
+          { "minutes": "700", "revenue": 750 },
+          { "minutes": "550", "revenue": 500 },
+          { "minutes": "500", "revenue": 500 },
+          { "minutes": "400", "revenue": 400 }
         ])};
 
         // Color scheme
-        var colors = ["#3914C0", "#9A26C1", "#FF6363"];
+        var colors = ["#595894", "#D77619", "#9A7A3E", "#E88D2D", "#FF6363"];
 
         // Create root and chart
-        var root2 = am5.Root.new("chartdiv2");
-        root2.setThemes([am5themes_Animated.new(root2)]);
+        var root7 = am5.Root.new("chartdiv7");
+        root7.setThemes([am5themes_Animated.new(root7)]);
 
-        var chart2 = root2.container.children.push(
-          am5xy.XYChart.new(root2, {
-            layout: root2.verticalLayout
+        var chart7 = root7.container.children.push(
+          am5xy.XYChart.new(root7, {
+            layout: root7.verticalLayout
           })
         );
 
         // Create axes
-        var xAxis2 = chart2.xAxes.push(
-          am5xy.CategoryAxis.new(root2, {
-            categoryField: "month",
-            renderer: am5xy.AxisRendererX.new(root2, { minGridDistance: 30 })
+        var xAxis7 = chart7.xAxes.push(
+          am5xy.CategoryAxis.new(root7, {
+            categoryField: "minutes",
+            renderer: am5xy.AxisRendererX.new(root7, { minGridDistance: 20 })
           })
         );
-        xAxis2.data.setAll(subscribersPerServiceType);
+        xAxis7.data.setAll(avgRevPerUser);
 
-        var yAxis2 = chart2.yAxes.push(
-          am5xy.ValueAxis.new(root2, {
-            renderer: am5xy.AxisRendererY.new(root2, {})
+        var yAxis7 = chart7.yAxes.push(
+          am5xy.ValueAxis.new(root7, {
+            renderer: am5xy.AxisRendererY.new(root7, {})
           })
         );
 
-        // Create stacked column series for each data type
-        ["fixed", "prepaid", "postpaid"].forEach((type, index) => {
-          var series2 = chart2.series.push(
-            am5xy.ColumnSeries.new(root2, {
-              name: type,
-              stacked: true, // Stacked column series
-              xAxis: xAxis2,
-              yAxis: yAxis2,
-              valueYField: type,
-              categoryXField: "month",
-              tooltip: am5.Tooltip.new(root2, { labelText: "{name}: {valueY}" })
-            })
-          );
-          series2.data.setAll(subscribersPerServiceType);
+        // Create bar series
+        var barSeries7 = chart7.series.push(
+          am5xy.ColumnSeries.new(root7, {
+            name: "Revenue",
+            xAxis: xAxis7,
+            yAxis: yAxis7,
+            valueYField: "revenue",
+            categoryXField: "minutes",
+            tooltip: am5.Tooltip.new(root7, { labelText: "{categoryX}: {valueY}" })
+          })
+        );
+        barSeries7.data.setAll(avgRevPerUser);
 
-          // Apply color scheme
-          series2.columns.template.setAll({
-            fill: am5.color(colors[index % colors.length]),
-            stroke: am5.color(colors[index % colors.length])
-          });
+        // Apply the color scheme to bars
+        barSeries7.columns.template.adapters.add("fill", function(fill, target) {
+          const index = avgRevPerUser.indexOf(target.dataItem.dataContext);
+          return am5.color(colors[index % colors.length]);
+        });
+
+        barSeries7.columns.template.adapters.add("stroke", function(stroke, target) {
+          const index = avgRevPerUser.indexOf(target.dataItem.dataContext);
+          return am5.color(colors[index % colors.length]);
         });
 
         // Add legend
-        var legend = chart2.children.push(
-          am5.Legend.new(root2, {
+        var legend = chart7.children.push(
+          am5.Legend.new(root7, {
             centerX: am5.percent(50),
             x: am5.percent(50),
-            layout: root2.horizontalLayout
+            layout: root7.horizontalLayout
           })
         );
 
-        legend.data.setAll(chart2.series.values);
+        legend.data.setAll(chart7.series.values);
 
         // Animate chart appearance
-        chart2.appear(1000, 100);
-      });
+        chart7.appear(1000, 100);
+      }); // End of am5.ready
     </script>
   </body>
   </html>
 `;
 
+const areaChartHtmlContent = `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Network Utilization Per Subscription Plan</title>
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #ffffff; /* White background for the chart */
+      }
+      #chartdiv8 {
+        width: 100%;
+        height: 500px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chartdiv8"></div>
+    <script>
+      am5.ready(function() {
+        // Data for area chart
+        var networkUtilPerSubPlan = ${JSON.stringify([
+          { "date": new Date(2024, 4, 1).getTime(), "5GB": 28.69, "500MB": 24.51, "2GB": 22.01, "5GB_tethering": 24.79 },
+          { "date": new Date(2024, 5, 1).getTime(), "5GB": 22.54, "500MB": 24.14, "2GB": 37.29, "5GB_tethering": 30.79 },
+          { "date": new Date(2024, 6, 1).getTime(), "5GB": 24.1, "500MB": 21.43, "2GB": 35.88, "5GB_tethering": 30.44 },
+          { "date": new Date(2024, 7, 1).getTime(), "5GB": 22.43, "500MB": 22.93, "2GB": 35.69, "5GB_tethering": 29.75 },
+          { "date": new Date(2024, 8, 1).getTime(), "5GB": 22.93, "500MB": 22.93, "2GB": 35.23, "5GB_tethering": 29.62 },
+          { "date": new Date(2024, 9, 1).getTime(), "5GB": 23.9, "500MB": 23.9, "2GB": 35.53, "5GB_tethering": 30.12 }
+        ])};
 
+        // Color scheme
+        var colors = ["#595894", "#D77619", "#9A7A3E", "#E88D2D", "#FF6363"];
 
-const pieChartHtmlContent = `
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Pie Chart - Data Plan Purchased</title>
-  <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-  <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
-  <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-    #chartdiv3 {
-      width: 100%;
-      height: 300px; /* Adjusted height for better visuals */
-      margin-bottom: 20px;
-    }
-  </style>
-</head>
-<body>
-  <div id="chartdiv3"></div>
-  <script>
-    am5.ready(function() {
-      // Data for pie chart
-      var dataPlanPurchased = ${JSON.stringify([
-        { 'plan': '5 GB', 'percentage': 42.37 },
-        { 'plan': '5 GB with tethering', 'percentage': 32.63 },
-        { 'plan': '2 GB', 'percentage': 21.46 },
-        { 'plan': '500 MB', 'percentage': 3.53 }
-      ])};
+        // Create root and chart
+        var root8 = am5.Root.new("chartdiv8");
+        root8.setThemes([am5themes_Animated.new(root8)]);
 
-      // Color scheme
-      var colors = ["#FF6363", "#9A26C1", "#3914C0", "#FFFFFF"];
+        var chart8 = root8.container.children.push(
+          am5xy.XYChart.new(root8, {
+            layout: root8.verticalLayout,
+            background: am5.Rectangle.new(root8, {
+              fill: am5.color(0xffffff),
+              fillOpacity: 1
+            })
+          })
+        );
 
-      // Create root and chart
-      var root3 = am5.Root.new("chartdiv3");
-      root3.setThemes([am5themes_Animated.new(root3)]);
+        // Create axes
+        var xAxis8 = chart8.xAxes.push(
+          am5xy.DateAxis.new(root8, {
+            baseInterval: { timeUnit: "month", count: 1 },
+            renderer: am5xy.AxisRendererX.new(root8, {
+              minGridDistance: 50
+            }),
+            tooltip: am5.Tooltip.new(root8, {})
+          })
+        );
 
-      var chart3 = root3.container.children.push(
-        am5percent.PieChart.new(root3, {
-          layout: root3.verticalLayout
-        })
-      );
+        var yAxis8 = chart8.yAxes.push(
+          am5xy.ValueAxis.new(root8, {
+            renderer: am5xy.AxisRendererY.new(root8, {
+              minGridDistance: 20
+            })
+          })
+        );
 
-      // Create series
-      var series3 = chart3.series.push(
-        am5percent.PieSeries.new(root3, {
-          valueField: "percentage",
-          categoryField: "plan",
-          tooltip: am5.Tooltip.new(root3, { labelText: "{category}: {value}%" })
-        })
-      );
+        // Create series for each subscription plan
+        ["5GB", "500MB", "2GB", "5GB_tethering"].forEach(function(plan, index) {
+          var series = chart8.series.push(
+            am5xy.SmoothedXLineSeries.new(root8, {
+              name: plan,
+              xAxis: xAxis8,
+              yAxis: yAxis8,
+              valueYField: plan,
+              valueXField: "date",
+              tooltip: am5.Tooltip.new(root8, { labelText: "{name}: {valueY}%" }),
+              stacked: true, // Enable stacking for area chart
+              strokeWidth: 2, // Set the line thickness
+              fill: am5.color(colors[index]),
+              stroke: am5.color(colors[index])
+            })
+          );
+          series.data.setAll(networkUtilPerSubPlan);
 
-      series3.data.setAll(dataPlanPurchased);
+          // Configure fill for the area under the line
+          series.fills.template.setAll({
+            fill: am5.color(colors[index]),
+            fillOpacity: 0.2,
+            visible: true
+          });
 
-      // Apply color scheme
-      series3.slices.template.adapters.add("fill", function (fill, target) {
-        return am5.color(colors[target.dataItem.index % colors.length]);
-      });
+          // Add bullets to the series
+          series.bullets.push(function() {
+            return am5.Bullet.new(root8, {
+              sprite: am5.Circle.new(root8, {
+                radius: 4,
+                fill: series.get("fill"),
+                stroke: am5.color(0xffffff),
+                strokeWidth: 2
+              })
+            });
+          });
+        });
 
-      series3.slices.template.adapters.add("stroke", function (stroke, target) {
-        return am5.color("#FFFFFF"); // Add white stroke for contrast
-      });
+        // Add legend
+        var legend = chart8.children.push(
+          am5.Legend.new(root8, {
+            centerX: am5.percent(50),
+            x: am5.percent(50),
+            layout: root8.horizontalLayout
+          })
+        );
 
-      series3.slices.template.setAll({
-        strokeWidth: 2
-      });
+        legend.data.setAll(chart8.series.values);
 
-      // Animate chart
-      series3.appear(1000, 100);
-    }); // End of am5.ready
-  </script>
-</body>
-</html>
+        // Animate chart appearance
+        chart8.appear(1000, 100);
+      }); // End of am5.ready
+    </script>
+  </body>
+  </html>
 `;
-
-
 
 
 
@@ -701,17 +672,12 @@ const pieChartHtmlContent = `
         <Text>Service Utilization</Text>
         <WebView 
             originWhitelist={['*']}
-            source={{ html: chartHtmlContent1 }} 
+            source={{ html: barChartHtmlContent }} 
         />
         <Text>Total Subscriber Per Service Type</Text>
         <WebView 
             originWhitelist={['*']}
-            source={{ html: chartHtmlContent2 }} 
-        />
-        <Text>Data Plan Purchased</Text>
-        <WebView 
-            originWhitelist={['*']}
-            source={{ html: pieChartHtmlContent }} 
+            source={{ html: areaChartHtmlContent }} 
         />
         </SafeAreaView>
     </ScrollView>
@@ -727,7 +693,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OverallDashboard;
+export default AdditionalDashboard;
 
 
 

@@ -3,15 +3,17 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import HeaderTabsGrid from "../components/HeaderTabsGrid";
 import InfoCardGrid from "../components/InfoCardGrid";
-import { useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native"; // Import route
 import AppHeader from "../components/appHeader";
-
 import ConditionalDashboard from "../components/ConditionalDashboard";
 import OverallDashboard from "../components/OverallDashboard";
+import FinanceDashboard from "../components/FinanceDashboard";
+import AdditionalDashboard from "../components/additionalDashboard";
+
 
 const DashboardScreen = () => {
-  const route = useRoute();
-  const appName = route.params?.appName || "Dashboard";
+  const route = useRoute(); // Get route params
+  const appName = route.params?.appName || "Dashboard"; // Fallback if no param
 
   const [activeTab, setActiveTab] = useState("Overall Dashboard");
 
@@ -22,7 +24,7 @@ const DashboardScreen = () => {
   ];
 
   const cards = [
-    { baseColor: "#FFCB05", cardName: "Subscribers", cardValue: "154,625" },
+    { baseColor: "#02733C", cardName: "Subscribers", cardValue: "154,625" },
     { baseColor: "#191146", cardName: "Revenue", cardValue: "1,234,567" },
     { baseColor: "#272727", cardName: "Market Share", cardValue: "987,654" },
     { baseColor: "#712D2D", cardName: "Churn Rate", cardValue: "123,456" },
@@ -31,7 +33,7 @@ const DashboardScreen = () => {
   const navigation = useNavigation();
   const navgigateToApp = (appName) => {
     if (appName === 'MTN') {
-      navigation.navigate('chartdashboards', { appName: appName });
+      navigation.navigate('chartdashboards', { appName: appName }); // Pass appName as a param
     } else {
       alert(`Feature for ${appName} is not yet implemented.`);
     }
@@ -42,12 +44,12 @@ const DashboardScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.screenContainer}>
       {/* App Header */}
       <AppHeader navgigateToApp={navgigateToApp} />
 
       {/* Main Content */}
-      <ScrollView style={styles.scrollView}>
+      <ScrollView style={styles.container}>
         {/* Header Tabs */}
         <HeaderTabsGrid
           tabs={tabs}
@@ -60,6 +62,8 @@ const DashboardScreen = () => {
           <InfoCardGrid cardData={cards} />
           <ConditionalDashboard matchProp={"associatedTabName"} matchValue={activeTab}>
             <OverallDashboard associatedTabName={"Overall Dashboard"} />
+            <FinanceDashboard associatedTabName={"Finance Dashboard"} />
+            <AdditionalDashboard associatedTabName={"Additional Dashboard"}></AdditionalDashboard>
           </ConditionalDashboard>
         </View>
       </ScrollView>
@@ -68,16 +72,21 @@ const DashboardScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+    backgroundColor: "#f9f9f9",
+    paddingTop: 60, // Add padding to account for AppHeader height
+  },
   container: {
     flex: 1,
     backgroundColor: "#f9f9f9",
-    paddingTop: 55,
-  },
-  scrollView: {
-    flex: 1,
   },
   cardContainer: {
-    marginTop: 5,
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  chartContainer: {
+    marginTop: 20,
     paddingHorizontal: 10,
   },
 });

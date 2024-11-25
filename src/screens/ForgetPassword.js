@@ -16,7 +16,7 @@
 // import { SafeAreaView } from "react-native";
 // import { StatusBar } from "react-native";
 
-// const Login = ({ handleLogin }) => {
+// const ForgetPassword = ({ handleLogin }) => {
 //   const [username, setUsername] = useState("");
 //   const [password, setPassword] = useState("");
 //   const [passwordVisible, setPasswordVisible] = useState(false); // State to toggle password visibility
@@ -63,37 +63,7 @@
 //                   onChangeText={setUsername}
 //                 />
 
-//                 {/* Password Input */}
-//                 <Text style={styles.label}>Password</Text>
-//                 <View style={styles.passwordContainer}>
-//                   <TextInput
-//                     style={styles.inputWithIcon}
-//                     placeholder="Password"
-//                     secureTextEntry={!passwordVisible} // Use state to toggle visibility
-//                     value={password}
-//                     onChangeText={setPassword}
-//                   />
-//                   <TouchableOpacity
-//                     style={styles.iconContainer}
-//                     onPress={togglePasswordVisibility}
-//                   >
-//                     <Icon
-//                       name={passwordVisible ? "eye" : "eye-slash"} // Toggle between "eye" and "eye-slash"
-//                       size={20}
-//                       color="#555"
-//                     />
-//                   </TouchableOpacity>
-//                 </View>
-
-//                 {/* Remember Me and Forgot Password */}
-//                 <View style={styles.row}>
-//                   <View style={styles.rememberMe}>
-//                     <Text style={styles.rememberMeText}>Remember me</Text>
-//                   </View>
-//                   <TouchableOpacity>
-//                     <Text style={styles.forgotPassword}>Forgot Password?</Text>
-//                   </TouchableOpacity>
-//                 </View>
+                
 
 //                 {/* Buttons */}
 //                 <View style={styles.buttonRow}>
@@ -112,20 +82,16 @@
 //                       if (username && password) {
 //                         handleLogin(username, password); // Call the handleLogin function with username and password
 //                       } else {
-//                         alert("Please enter both username and password");
+//                         alert("Please enter username");
 //                       }
 //                     }}
 //                   >
-//                     <Text style={styles.loginButtonText}>Login</Text>
+//                     <Text style={styles.loginButtonText}>Submit</Text>
 //                   </TouchableOpacity>
 //                 </View>
 
 //                 {/* Footer */}
-//                 <TouchableOpacity>
-//                   <Text style={styles.signUpText}>
-//                     Don't have any account?
-//                   </Text>
-//                 </TouchableOpacity>
+                
 //               </View>
 
 //               {/* Support Section */}
@@ -293,10 +259,7 @@
 //   },
 // });
 
-// export default Login;
-
-
-
+// export default ForgetPassword;
 
 
 
@@ -336,133 +299,91 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "react-native";
+import { resetPassword } from "../utils/api"; // Adjust the path to your api.js file
 
-const Login = ({ handleLogin }) => {
+const ForgetPassword = () => {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const navigation = useNavigation(); // Access the navigation instance
-
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
+  const navigation = useNavigation()
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
 
+  const handleSubmit = async () => {
+    if (!username) {
+      alert("Please enter your username.");
+      return;
+    }
+
+    try {
+      const response = await resetPassword(username);
+      console.log(response);
+      alert("Password reset request sent successfully.");
+      //navigation.navigate('Login',{})
+      
+    } catch (error) {
+      alert("An error occurred while processing your request.");
+      console.error(error);
+    }
+  };
+
   return (
-    <>
-      <SafeAreaView style={styles.safeArea}>
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
-        >
-          <TouchableWithoutFeedback onPress={dismissKeyboard}>
-            <ScrollView
-              contentContainerStyle={styles.scrollView}
-              keyboardShouldPersistTaps="handled"
-            >
-              {/* Logo Section */}
-              <Image
-                source={require("../../assets/logo.png")}
-                style={styles.logo}
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+      >
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
+          <ScrollView
+            contentContainerStyle={styles.scrollView}
+            keyboardShouldPersistTaps="handled"
+          >
+            <Image
+              source={require("../../assets/logo.png")}
+              style={styles.logo}
+            />
+
+            <View style={styles.formContainer}>
+              <Text style={styles.ikonPowered}>IKON</Text>
+              <Text style={styles.title}>Harness the Power of Data</Text>
+
+              <Text style={styles.label}>User Name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your username"
+                value={username}
+                onChangeText={setUsername}
               />
 
-              {/* Form Section */}
-              <View style={styles.formContainer}>
-                <Text style={styles.ikonPowered}>IKON</Text>
-                <Text style={styles.title}>Harness the Power of Data</Text>
-
-                {/* Username Input */}
-                <Text style={styles.label}>User Name</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your username"
-                  value={username}
-                  onChangeText={setUsername}
-                />
-
-                {/* Password Input */}
-                <Text style={styles.label}>Password</Text>
-                <View style={styles.passwordContainer}>
-                  <TextInput
-                    style={styles.inputWithIcon}
-                    placeholder="Password"
-                    secureTextEntry={!passwordVisible}
-                    value={password}
-                    onChangeText={setPassword}
-                  />
-                  <TouchableOpacity
-                    style={styles.iconContainer}
-                    onPress={togglePasswordVisibility}
-                  >
-                    <Icon
-                      name={passwordVisible ? "eye" : "eye-slash"}
-                      size={20}
-                      color="#555"
-                    />
-                  </TouchableOpacity>
-                </View>
-
-                {/* Remember Me and Forgot Password */}
-                <View style={styles.row}>
-                  <View style={styles.rememberMe}>
-                    <Text style={styles.rememberMeText}>Remember me</Text>
-                  </View>
-                  <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
-                    <Text style={styles.forgotPassword}>Forgot Password?</Text>
-                  </TouchableOpacity>
-                </View>
-
-                {/* Buttons */}
-                <View style={styles.buttonRow}>
-                  <TouchableOpacity
-                    style={styles.resetButton}
-                    onPress={() => {
-                      setUsername("");
-                      setPassword("");
-                    }}
-                  >
-                    <Text style={styles.resetButtonText}>Reset</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.loginButton}
-                    onPress={() => {
-                      if (username && password) {
-                        handleLogin(username, password);
-                      } else {
-                        alert("Please enter both username and password");
-                      }
-                    }}
-                  >
-                    <Text style={styles.loginButtonText}>Login</Text>
-                  </TouchableOpacity>
-                </View>
-
-                {/* Footer */}
-                <TouchableOpacity>
-                  <Text style={styles.signUpText}>Don't have any account?</Text>
+              <View style={styles.buttonRow}>
+                <TouchableOpacity
+                  style={styles.resetButton}
+                  onPress={() => setUsername("")}
+                >
+                  <Text style={styles.resetButtonText}>Reset</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.loginButton}
+                  onPress={handleSubmit}
+                >
+                  <Text style={styles.loginButtonText}>Submit</Text>
                 </TouchableOpacity>
               </View>
+            </View>
 
-              {/* Support Section */}
-              <Text style={styles.supportText}>Looking for Support?</Text>
-              <Text style={styles.version}>Version 8.0.0</Text>
-
-              {/* Copyright Section */}
-              <Text style={styles.copyrightText}>
-                © Copyright Powered by Keross
-              </Text>
-            </ScrollView>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </>
+            <Text style={styles.supportText}>Looking for Support?</Text>
+            <Text style={styles.version}>Version 8.0.0</Text>
+            <Text style={styles.copyrightText}>
+              © Copyright Powered by Keross
+            </Text>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -615,4 +536,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default ForgetPassword;

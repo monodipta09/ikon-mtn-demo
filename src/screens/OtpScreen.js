@@ -9,7 +9,6 @@ import {
 import { Image } from 'expo-image';
 import { useNavigation } from '@react-navigation/native';
 import { otpApi } from '../utils/api';
-import FastImage from 'react-native-fast-image';
 
 const OtpScreen = () => {
   const navigation = useNavigation();
@@ -68,14 +67,14 @@ const OtpScreen = () => {
       </TouchableOpacity>
 
       <Image
-      style={styles.icon}
-      source={require('../../assets/mailPic.gif')} // Ensure this path is correct in your project structure
-      resizeMode={FastImage.resizeMode.contain} // Use FastImage's resizeMode prop
-    />
+        style={styles.icon}
+        source={require('../../assets/mailPic.gif')} // Correct the file path to ensure it matches your project structure
+        resizeMode="contain"
+      />
 
       <Text style={styles.title}>Enter confirmation code</Text>
       <Text style={styles.subtitle}>A code was sent</Text>
-      <Text style={styles.timerText}>The code will expire after {formatTime(timeLeft)}</Text>
+      <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
 
       <View style={styles.inputContainer}>
         <TextInput

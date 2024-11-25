@@ -425,86 +425,12 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, ScrollView, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-const OverallDashboard = () => {
-    const chartHtmlContent1 = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Service Utilization</title>
-      <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-      <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-      <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-      <style>
-        body {
-          margin: 0;
-          padding: 0;
-          font-family: Arial, sans-serif;
-        }
-        #chartdiv1 {
-          width: 100%;
-          height: 200px;
-        }
-      </style>
-    </head>
-    <body>
-      <div id="chartdiv1"></div>
-      <script>
-        am5.ready(function() {
-          // Data for first chart
-          var serviceUtilization = ${JSON.stringify([
-            { 'month': 'Jan', 'text': 0.38, 'voice': 0.33, 'data': 0.29 },
-            { 'month': 'Feb', 'text': 0.37, 'voice': 0.32, 'data': 0.30 },
-            { 'month': 'Mar', 'text': 0.39, 'voice': 0.34, 'data': 0.31 },
-            { 'month': 'Apr', 'text': 0.36, 'voice': 0.32, 'data': 0.28 },
-            { 'month': 'May', 'text': 0.38, 'voice': 0.35, 'data': 0.30 },
-            { 'month': 'Jun', 'text': 0.39, 'voice': 0.34, 'data': 0.29 },
-            { 'month': 'Jul', 'text': 0.37, 'voice': 0.33, 'data': 0.28 },
-            { 'month': 'Aug', 'text': 0.36, 'voice': 0.35, 'data': 0.30 },
-            { 'month': 'Sep', 'text': 0.38, 'voice': 0.33, 'data': 0.31 },
-            { 'month': 'Oct', 'text': 0.39, 'voice': 0.34, 'data': 0.30 },
-            { 'month': 'Nov', 'text': 0.37, 'voice': 0.32, 'data': 0.29 },
-            { 'month': 'Dec', 'text': 0.36, 'voice': 0.33, 'data': 0.28 }
-          ])};
-
-          // First chart logic
-          var root1 = am5.Root.new("chartdiv1");
-          root1.setThemes([am5themes_Animated.new(root1)]);
-
-          var chart1 = root1.container.children.push(am5xy.XYChart.new(root1, {
-            layout: root1.verticalLayout
-          }));
-
-          var xAxis1 = chart1.xAxes.push(am5xy.CategoryAxis.new(root1, {
-            categoryField: "month",
-            renderer: am5xy.AxisRendererX.new(root1, { minGridDistance: 30 })
-          }));
-          xAxis1.data.setAll(serviceUtilization);
-
-          var yAxis1 = chart1.yAxes.push(am5xy.ValueAxis.new(root1, {
-            renderer: am5xy.AxisRendererY.new(root1, {})
-          }));
-
-          ["text", "voice", "data"].forEach(type => {
-            var series1 = chart1.series.push(am5xy.LineSeries.new(root1, {
-              name: type,
-              xAxis: xAxis1,
-              yAxis: yAxis1,
-              valueYField: type,
-              categoryXField: "month",
-              tooltip: am5.Tooltip.new(root1, { labelText: "{name}: {valueY}" })
-            }));
-            series1.data.setAll(serviceUtilization);
-          });
-        }); // End of am5.ready
-      </script>
-    </body>
-    </html>
-  `;
-  const chartHtmlContent2 = `
+const FinanceDashboard = () => {
+    const columnLineChartHtmlContent = `
   <!DOCTYPE html>
   <html>
   <head>
-    <title>Service Utilization</title>
+    <title>Gross vs Net Users</title>
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
@@ -513,9 +439,8 @@ const OverallDashboard = () => {
         margin: 0;
         padding: 0;
         font-family: Arial, sans-serif;
-        background-color: #FFFFFF; /* White background */
       }
-      #chartdiv2 {
+      #chartdiv4 {
         width: 100%;
         height: 400px;
         margin-bottom: 20px;
@@ -523,103 +448,115 @@ const OverallDashboard = () => {
     </style>
   </head>
   <body>
-    <div id="chartdiv2"></div>
+    <div id="chartdiv4"></div>
     <script>
       am5.ready(function() {
         // Data for chart
-        var subscribersPerServiceType = ${JSON.stringify([
-          { 'month': 'Jan', 'fixed': 570, 'postpaid': 710, 'prepaid': 390 },
-          { 'month': 'Feb', 'fixed': 450, 'postpaid': 610, 'prepaid': 610 },
-          { 'month': 'Mar', 'fixed': 510, 'postpaid': 670, 'prepaid': 570 },
-          { 'month': 'Apr', 'fixed': 590, 'postpaid': 480, 'prepaid': 520 },
-          { 'month': 'May', 'fixed': 530, 'postpaid': 530, 'prepaid': 530 },
-          { 'month': 'Jun', 'fixed': 540, 'postpaid': 630, 'prepaid': 620 },
-          { 'month': 'Jul', 'fixed': 670, 'postpaid': 480, 'prepaid': 470 },
-          { 'month': 'Aug', 'fixed': 240, 'postpaid': 240, 'prepaid': 0 },
-          { 'month': 'Sep', 'fixed': 240, 'postpaid': 240, 'prepaid': 0 },
-          { 'month': 'Oct', 'fixed': 170, 'postpaid': 300, 'prepaid': 0 },
-          { 'month': 'Nov', 'fixed': 300, 'postpaid': 300, 'prepaid': 0 },
-          { 'month': 'Dec', 'fixed': 340, 'postpaid': 340, 'prepaid': 0 }
+        var grossVsNetUsers = ${JSON.stringify([
+          { 'month': 'Jan 2024', 'gross': 20, 'net': 15 },
+          { 'month': 'Feb 2024', 'gross': 50, 'net': 45 },
+          { 'month': 'Mar 2024', 'gross': 120, 'net': 100 },
+          { 'month': 'Apr 2024', 'gross': 300, 'net': 280 },
+          { 'month': 'May 2024', 'gross': 400, 'net': 350 },
+          { 'month': 'Jun 2024', 'gross': 630, 'net': 630 },
+          { 'month': 'Jul 2024', 'gross': 1310, 'net': 1310 },
+          { 'month': 'Aug 2024', 'gross': 1190, 'net': 1190 },
+          { 'month': 'Sep 2024', 'gross': 1510, 'net': 1510 },
+          { 'month': 'Oct 2024', 'gross': 1260, 'net': 1260 },
+          { 'month': 'Nov 2024', 'gross': 1780, 'net': 1510 },
+          { 'month': 'Dec 2024', 'gross': 1660, 'net': 156 }
         ])};
 
-        // Color scheme
-        var colors = ["#3914C0", "#9A26C1", "#FF6363"];
-
         // Create root and chart
-        var root2 = am5.Root.new("chartdiv2");
-        root2.setThemes([am5themes_Animated.new(root2)]);
+        var root4 = am5.Root.new("chartdiv4");
+        root4.setThemes([am5themes_Animated.new(root4)]);
 
-        var chart2 = root2.container.children.push(
-          am5xy.XYChart.new(root2, {
-            layout: root2.verticalLayout
+        var chart4 = root4.container.children.push(
+          am5xy.XYChart.new(root4, {
+            layout: root4.verticalLayout
           })
         );
 
         // Create axes
-        var xAxis2 = chart2.xAxes.push(
-          am5xy.CategoryAxis.new(root2, {
+        var xAxis4 = chart4.xAxes.push(
+          am5xy.CategoryAxis.new(root4, {
             categoryField: "month",
-            renderer: am5xy.AxisRendererX.new(root2, { minGridDistance: 30 })
+            renderer: am5xy.AxisRendererX.new(root4, { minGridDistance: 30 })
           })
         );
-        xAxis2.data.setAll(subscribersPerServiceType);
+        xAxis4.data.setAll(grossVsNetUsers);
 
-        var yAxis2 = chart2.yAxes.push(
-          am5xy.ValueAxis.new(root2, {
-            renderer: am5xy.AxisRendererY.new(root2, {})
+        var yAxis4 = chart4.yAxes.push(
+          am5xy.ValueAxis.new(root4, {
+            renderer: am5xy.AxisRendererY.new(root4, {})
           })
         );
 
-        // Create stacked column series for each data type
-        ["fixed", "prepaid", "postpaid"].forEach((type, index) => {
-          var series2 = chart2.series.push(
-            am5xy.ColumnSeries.new(root2, {
-              name: type,
-              stacked: true, // Stacked column series
-              xAxis: xAxis2,
-              yAxis: yAxis2,
-              valueYField: type,
-              categoryXField: "month",
-              tooltip: am5.Tooltip.new(root2, { labelText: "{name}: {valueY}" })
+        // Add Gross column series
+        var columnSeries = chart4.series.push(
+          am5xy.ColumnSeries.new(root4, {
+            name: "Gross",
+            xAxis: xAxis4,
+            yAxis: yAxis4,
+            valueYField: "gross",
+            categoryXField: "month",
+            tooltip: am5.Tooltip.new(root4, { labelText: "{name}: {valueY}" })
+          })
+        );
+        columnSeries.data.setAll(grossVsNetUsers);
+
+        // Add Net line series
+        var lineSeries = chart4.series.push(
+          am5xy.LineSeries.new(root4, {
+            name: "Net",
+            xAxis: xAxis4,
+            yAxis: yAxis4,
+            valueYField: "net",
+            categoryXField: "month",
+            tooltip: am5.Tooltip.new(root4, { labelText: "{name}: {valueY}" }),
+            stroke: am5.color(0xff0000),
+            fill: am5.color(0xff0000)
+          })
+        );
+        lineSeries.data.setAll(grossVsNetUsers);
+
+        // Add bullets to the line series
+        lineSeries.bullets.push(function() {
+          return am5.Bullet.new(root4, {
+            sprite: am5.Circle.new(root4, {
+              radius: 5,
+              fill: lineSeries.get("fill")
             })
-          );
-          series2.data.setAll(subscribersPerServiceType);
-
-          // Apply color scheme
-          series2.columns.template.setAll({
-            fill: am5.color(colors[index % colors.length]),
-            stroke: am5.color(colors[index % colors.length])
           });
         });
 
         // Add legend
-        var legend = chart2.children.push(
-          am5.Legend.new(root2, {
+        var legend = chart4.children.push(
+          am5.Legend.new(root4, {
             centerX: am5.percent(50),
             x: am5.percent(50),
-            layout: root2.horizontalLayout
+            layout: root4.horizontalLayout
           })
         );
 
-        legend.data.setAll(chart2.series.values);
+        legend.data.setAll(chart4.series.values);
 
-        // Animate chart appearance
-        chart2.appear(1000, 100);
-      });
+        // Animate series appearance
+        chart4.appear(1000, 100);
+      }); // End of am5.ready
     </script>
   </body>
   </html>
 `;
 
 
-
-const pieChartHtmlContent = `
+const rowChartHtmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pie Chart - Data Plan Purchased</title>
+  <title>Actual vs Budget</title>
   <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-  <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
   <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
   <style>
     body {
@@ -627,64 +564,103 @@ const pieChartHtmlContent = `
       padding: 0;
       font-family: Arial, sans-serif;
     }
-    #chartdiv3 {
+    #chartdiv5 {
       width: 100%;
-      height: 300px; /* Adjusted height for better visuals */
+      height: 500px;
       margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <div id="chartdiv3"></div>
+  <div id="chartdiv5"></div>
   <script>
     am5.ready(function() {
-      // Data for pie chart
-      var dataPlanPurchased = ${JSON.stringify([
-        { 'plan': '5 GB', 'percentage': 42.37 },
-        { 'plan': '5 GB with tethering', 'percentage': 32.63 },
-        { 'plan': '2 GB', 'percentage': 21.46 },
-        { 'plan': '500 MB', 'percentage': 3.53 }
+      // Data for row chart
+      var actualVsBudget = ${JSON.stringify([
+        { "company": "Company 1", "budget": 3.0, "actual": 2.5 },
+        { "company": "Company 2", "budget": 3.5, "actual": 2.7 },
+        { "company": "Company 3", "budget": 3.0, "actual": 2.8 },
+        { "company": "Company 4", "budget": 3.7, "actual": 3.5 },
+        { "company": "Company 5", "budget": 2.8, "actual": 2.2 },
+        { "company": "Company 6", "budget": 2.9, "actual": 2.7 },
+        { "company": "Company 7", "budget": 2.3, "actual": 2.9 },
+        { "company": "Company 8", "budget": 2.7, "actual": 2.6 },
+        { "company": "Company 9", "budget": 2.8, "actual": 2.1 },
+        { "company": "Company 10", "budget": 2.9, "actual": 2.7 },
+        { "company": "Company 11", "budget": 2.7, "actual": 2.2 }
       ])};
 
-      // Color scheme
-      var colors = ["#FF6363", "#9A26C1", "#3914C0", "#FFFFFF"];
-
       // Create root and chart
-      var root3 = am5.Root.new("chartdiv3");
-      root3.setThemes([am5themes_Animated.new(root3)]);
+      var root5 = am5.Root.new("chartdiv5");
+      root5.setThemes([am5themes_Animated.new(root5)]);
 
-      var chart3 = root3.container.children.push(
-        am5percent.PieChart.new(root3, {
-          layout: root3.verticalLayout
+      var chart5 = root5.container.children.push(
+        am5xy.XYChart.new(root5, {
+          panX: true,
+          panY: false,
+          layout: root5.verticalLayout
         })
       );
 
-      // Create series
-      var series3 = chart3.series.push(
-        am5percent.PieSeries.new(root3, {
-          valueField: "percentage",
-          categoryField: "plan",
-          tooltip: am5.Tooltip.new(root3, { labelText: "{category}: {value}%" })
+      // Create axes
+      var yAxis5 = chart5.yAxes.push(
+        am5xy.CategoryAxis.new(root5, {
+          categoryField: "company",
+          renderer: am5xy.AxisRendererY.new(root5, {
+            inversed: true,
+            minGridDistance: 20
+          })
+        })
+      );
+      yAxis5.data.setAll(actualVsBudget);
+
+      var xAxis5 = chart5.xAxes.push(
+        am5xy.ValueAxis.new(root5, {
+          renderer: am5xy.AxisRendererX.new(root5, {})
         })
       );
 
-      series3.data.setAll(dataPlanPurchased);
+      // Add Budget series
+      var budgetSeries = chart5.series.push(
+        am5xy.ColumnSeries.new(root5, {
+          name: "Budget",
+          xAxis: xAxis5,
+          yAxis: yAxis5,
+          valueXField: "budget",
+          categoryYField: "company",
+          tooltip: am5.Tooltip.new(root5, { labelText: "{name}: {valueX}" })
+        })
+      );
+      budgetSeries.data.setAll(actualVsBudget);
 
-      // Apply color scheme
-      series3.slices.template.adapters.add("fill", function (fill, target) {
-        return am5.color(colors[target.dataItem.index % colors.length]);
-      });
+      // Add Actual series
+      var actualSeries = chart5.series.push(
+        am5xy.ColumnSeries.new(root5, {
+          name: "Actual",
+          xAxis: xAxis5,
+          yAxis: yAxis5,
+          valueXField: "actual",
+          categoryYField: "company",
+          tooltip: am5.Tooltip.new(root5, { labelText: "{name}: {valueX}" }),
+          fill: am5.color(0xff0000),
+          stroke: am5.color(0xff0000)
+        })
+      );
+      actualSeries.data.setAll(actualVsBudget);
 
-      series3.slices.template.adapters.add("stroke", function (stroke, target) {
-        return am5.color("#FFFFFF"); // Add white stroke for contrast
-      });
+      // Add legend
+      var legend = chart5.children.push(
+        am5.Legend.new(root5, {
+          centerX: am5.percent(50),
+          x: am5.percent(50),
+          layout: root5.horizontalLayout
+        })
+      );
 
-      series3.slices.template.setAll({
-        strokeWidth: 2
-      });
+      legend.data.setAll(chart5.series.values);
 
       // Animate chart
-      series3.appear(1000, 100);
+      chart5.appear(1000, 100);
     }); // End of am5.ready
   </script>
 </body>
@@ -692,26 +668,128 @@ const pieChartHtmlContent = `
 `;
 
 
+const lineChartHtmlContent = `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>CAPEX to Sales Ratio</title>
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      #chartdiv6 {
+        width: 100%;
+        height: 400px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chartdiv6"></div>
+    <script>
+      am5.ready(function() {
+        // Data for line chart
+        var capexToSales = ${JSON.stringify([
+          { 'month': 'May 2024', 'CAPEXToSalesRatio': 5.00 },
+          { 'month': 'Jun 2024', 'CAPEXToSalesRatio': 24.46 },
+          { 'month': 'Jul 2024', 'CAPEXToSalesRatio': 15.18 },
+          { 'month': 'Aug 2024', 'CAPEXToSalesRatio': 19.52 },
+          { 'month': 'Sep 2024', 'CAPEXToSalesRatio': 17.70 },
+          { 'month': 'Oct 2024', 'CAPEXToSalesRatio': 15.03 }
+        ])};
+
+        // Create root and chart
+        var root6 = am5.Root.new("chartdiv6");
+        root6.setThemes([am5themes_Animated.new(root6)]);
+
+        var chart6 = root6.container.children.push(
+          am5xy.XYChart.new(root6, {
+            layout: root6.verticalLayout
+          })
+        );
+
+        // Create axes
+        var xAxis6 = chart6.xAxes.push(
+          am5xy.CategoryAxis.new(root6, {
+            categoryField: "month",
+            renderer: am5xy.AxisRendererX.new(root6, { minGridDistance: 30 })
+          })
+        );
+        xAxis6.data.setAll(capexToSales);
+
+        var yAxis6 = chart6.yAxes.push(
+          am5xy.ValueAxis.new(root6, {
+            renderer: am5xy.AxisRendererY.new(root6, {})
+          })
+        );
+
+        // Create line series
+        var lineSeries6 = chart6.series.push(
+          am5xy.LineSeries.new(root6, {
+            name: "CAPEX to Sales Ratio",
+            xAxis: xAxis6,
+            yAxis: yAxis6,
+            valueYField: "CAPEXToSalesRatio",
+            categoryXField: "month",
+            tooltip: am5.Tooltip.new(root6, { labelText: "{name}: {valueY}%" })
+          })
+        );
+        lineSeries6.data.setAll(capexToSales);
+
+        // Add bullets to line series
+        lineSeries6.bullets.push(function() {
+          return am5.Bullet.new(root6, {
+            sprite: am5.Circle.new(root6, {
+              radius: 5,
+              fill: lineSeries6.get("fill")
+            })
+          });
+        });
+
+        // Add legend
+        var legend = chart6.children.push(
+          am5.Legend.new(root6, {
+            centerX: am5.percent(50),
+            x: am5.percent(50),
+            layout: root6.horizontalLayout
+          })
+        );
+
+        legend.data.setAll(chart6.series.values);
+
+        // Animate chart appearance
+        chart6.appear(1000, 100);
+      }); // End of am5.ready
+    </script>
+  </body>
+  </html>
+`;
+
 
 
 
   return (
     <ScrollView>
         <SafeAreaView style={styles.container}>
-        <Text>Service Utilization</Text>
+        <Text>Gross vs Net Subscriber Addition</Text>
         <WebView 
             originWhitelist={['*']}
-            source={{ html: chartHtmlContent1 }} 
+            source={{ html: columnLineChartHtmlContent }} 
         />
-        <Text>Total Subscriber Per Service Type</Text>
+        <Text>Actual vs Budget For The Current Year</Text>
         <WebView 
             originWhitelist={['*']}
-            source={{ html: chartHtmlContent2 }} 
+            source={{ html: rowChartHtmlContent }} 
         />
-        <Text>Data Plan Purchased</Text>
+        <Text>Capex To Sales Ratio</Text>
         <WebView 
             originWhitelist={['*']}
-            source={{ html: pieChartHtmlContent }} 
+            source={{ html: lineChartHtmlContent }} 
         />
         </SafeAreaView>
     </ScrollView>
@@ -727,7 +805,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OverallDashboard;
+export default FinanceDashboard;
 
 
 
