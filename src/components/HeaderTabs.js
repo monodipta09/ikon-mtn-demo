@@ -13,7 +13,7 @@ const HeaderTabs = ({ baseColor = "#FFD700", tabName = "Tab Name", isActive = fa
       ]}
       onPress={() => { onPress() }}
     >
-      <Text style={[styles.tabText, { color: isActive ? "#fff" : baseColor }]}>{tabName}</Text>
+      <Text style={[styles.tabText, { color: isActive ? "#000" : "#000" }]}>{tabName}</Text>
     </TouchableOpacity>
   );
 };
