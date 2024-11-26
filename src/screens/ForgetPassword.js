@@ -285,7 +285,7 @@
 
 
 
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -299,37 +299,52 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from "react-native";
-import { StatusBar } from "react-native";
 import { resetPassword } from "../utils/api"; // Adjust the path to your api.js file
 
 const ForgetPassword = () => {
   const [username, setUsername] = useState("");
   const navigation = useNavigation()
 
-  const dismissKeyboard = () => {
+  const dismissKeyboard = useCallback(() => {
     Keyboard.dismiss();
-  };
+  }, []);
 
-  const handleSubmit = async () => {
+  // Listen for keyboard events to handle keyboard visibility state
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => console.log("Keyboard is shown")
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => console.log("Keyboard is hidden")
+    );
+
+    // Clean up listeners when the component unmounts
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  const handleSubmit = useCallback(async () => {
     if (!username) {
       alert("Please enter your username.");
       return;
     }
-
+  
     try {
       const response = await resetPassword(username);
       console.log(response);
       alert("Password reset request sent successfully.");
-      //navigation.navigate('Login',{})
-      
+      // navigation.navigate('Login', {}) // Uncomment if needed
     } catch (error) {
       alert("An error occurred while processing your request.");
       console.error(error);
     }
-  };
-
+  }, [username]);
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
