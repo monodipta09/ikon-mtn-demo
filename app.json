@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "dummyProject",
-    "slug": "dummyProject",
+    "name": "MTNDemoApp",
+    "slug": "MTNDemoApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -30,7 +30,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "c7c50223-c019-4951-8743-d3d9ca523aed"
+        "projectId": "15139651-07f1-49c6-828d-be6c8d2b1b81"
       }
     }
   }

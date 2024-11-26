@@ -21,7 +21,7 @@ const Tab = createBottomTabNavigator();
 const DashboardTabs = ({ navigation }) => {
   useEffect(() => {
     const handleBackPress = () => {
-      Alert.alert('Logout', 'Do you want to logout and return to the Login screen?', [
+      Alert.alert('Logout', 'Do you want to logout', [
         {
           text: 'Cancel',
           style: 'cancel',

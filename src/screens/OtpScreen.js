@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';  // Add useRef\
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ const OtpScreen = () => {
   const [timeLeft, setTimeLeft] = useState(120); // Timer: 2 minutes in seconds
   const [isResendActive, setIsResendActive] = useState(false); // State to track resend button
 
+  const timerRef = useRef(null);
   // Timer logic
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -23,13 +24,19 @@ const OtpScreen = () => {
       return;
     }
     setIsResendActive(false);
-
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => prevTime - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [timeLeft]);
+  
+    if (!timerRef.current) { // Ensure the timer starts only once
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+    }
+  
+    // Cleanup the timer on unmount or when timeLeft reaches 0
+    return () => {
+      clearInterval(timerRef.current);
+      timerRef.current = null; // Reset the timer reference
+    };
+  }, [timeLeft]); // Dependency array contains timeLeft to trigger when it changes  
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
